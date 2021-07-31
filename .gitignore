@@ -1,0 +1,6 @@
+venv/
+*.csv
+
+geckodriver.log
+
+*.html
