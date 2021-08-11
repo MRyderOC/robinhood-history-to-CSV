@@ -33,7 +33,7 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
     signInXPATH = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div/button'
     driver.find_element_by_xpath(signInXPATH).click()
     
-    time.sleep(1)
+    time.sleep(3)
     try:
         # 2FA
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
@@ -96,8 +96,8 @@ def to_extract(path: str):
     interest, transfer, stocks, crypto, dividend, corpActions = [], [], [], [], [], []
     
     # Loading the data
-    f = codecs.open(path, 'r', 'utf-8')
-    soup = bs(f.read(), 'lxml').find('div', class_='col-12')
+    with codecs.open(path, 'r', 'utf-8') as f:
+        soup = bs(f.read(), 'lxml').find('div', class_='col-12')
 
     # Button tags Extraction
     trxsButtons = soup.find_all('header', class_='rh-expandable-item-header-98210179')
@@ -105,33 +105,30 @@ def to_extract(path: str):
 
     # Div tags Extraction
     trxsDivs = soup.find_all('div', class_='css-2ae82m')
-    divs = []
+    divs = [','.join(comma_deleter([item.text[:] for item in trx.find_all('span', class_="css-ktio0g")])) for trx in trxsDivs]
 
-    # Extracting stocks and cryptos
-    for trx in trxsDivs:
-        tmp = [item.text[:] for item in trx.find_all('span', class_="css-ktio0g")] ##### prone to bug
-        if tmp[0].isupper():
-            to_append = comma_deleter(tmp)
-            if to_append[2].startswith('Forward'):
-                corpActions.append(to_append)
-            else:
-                stocks.append(to_append)
-        elif tmp[0] == 'Market Sell' or tmp[0] == 'Market Buy':
-            crypto.append(comma_deleter(tmp))
-        divs.append(','.join(comma_deleter(tmp)))
-
-    # Creating a list of related buttons and divs
+    # Creating a list of corresponding buttons and divs
     divs_and_buttons = [{'buttons':buttons[i], 'divs':divs[i], 'visited':False} for i in range(len(trxsButtons))]
-    # Marking the crypto and stocks as visited
-    for item in divs_and_buttons:
-        s = item['divs'].split(',')[0]
-        if s.isupper() or s.startswith('Market'):
-            item['visited'] = True
+    del divs, buttons, trxsDivs, trxsButtons
 
-    # Extracting deposits, interests, 
+
+    # Extracting stocks, cryptos, and corpActions
+    for i in range(len(divs_and_buttons)):
+        tmp = divs_and_buttons[i]['divs'].split(',')
+        if tmp[0].isupper():
+            if tmp[2].startswith('Forward') or tmp[2].startswith('Reverse'):
+                corpActions.append(tmp)
+            else:
+                stocks.append(tmp)
+            divs_and_buttons[i]['visited'] = True
+        elif tmp[0].startswith('Market'):
+            crypto.append(tmp)
+            divs_and_buttons[i]['visited'] = True
+
+    # Extracting transfers, interests, 
     # and build a list of dividends dicts for further use
     dividendListOfDicts = []
-    for i in range(len(trxsButtons)):
+    for i in range(len(divs_and_buttons)):
         if 'Dividend' in divs_and_buttons[i]['buttons']:
             dividendListOfDicts.append(divs_and_buttons[i])
             divs_and_buttons[i]['visited'] = True
