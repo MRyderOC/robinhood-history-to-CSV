@@ -1,4 +1,4 @@
-# robinhood-history-to-CSV
+# robinhood-history-to-csv
 
 Extracting transaction history from Robinhood website and write them in CSV file.
 
