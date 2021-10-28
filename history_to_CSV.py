@@ -38,9 +38,9 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
         driver.find_element_by_xpath(button_xpath).click()
         # Sending the code
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
-        verification_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/div/form/input'
+        verification_xpath = '/html/body/div[6]/div[3]/div/section/div/form/div/div/input'
         driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
-        continue_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/div/form/footer/div[2]/button'
+        continue_xpath = '/html/body/div[6]/div[3]/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
     except Exception:
         # Sending the code if you already register 2FA
