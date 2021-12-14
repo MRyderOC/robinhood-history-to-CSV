@@ -39,15 +39,16 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
         # Sending the code
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
         verification_xpath = '/html/body/div[6]/div[3]/div/section/div/form/div/div/input'
+        time.sleep(1)
         driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
         continue_xpath = '/html/body/div[6]/div[3]/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
     except Exception:
         # Sending the code if you already register 2FA
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
-        verification_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/div[2]/div/label/div/input'
+        verification_xpath = '/html/body/div[6]/div[3]/div/section/div/form/div/div/input'
         driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
-        continue_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div[2]/div/button'
+        continue_xpath = '/html/body/div[6]/div[3]/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
 
     # Go to the history page (Account -> History) to scrape the data
@@ -95,12 +96,14 @@ def to_extract(path: str):
     buttons = [trx.text.replace('\n', '') for trx in trxs_buttons]
 
     # Div tags Extraction
-    trxs_divs = soup.find_all('div', class_='css-2ae82m')
+    trxs_divs = soup.find_all('div', class_='rh-expandable-item-a32bb9ad css-ffq7ai')
     divs = [
-        ','.join(comma_deleter([
+        ','.join(
+            ','.join(comma_deleter([
             item.text[:]
-            for item in trx.find_all('span', class_="css-ktio0g")
-        ]))
+            for item in trx.find_all('div', class_="css-6e9jx2")
+        ])).split(',')[1::2]
+        )
         for trx in trxs_divs
     ]
 
