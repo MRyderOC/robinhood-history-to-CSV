@@ -101,9 +101,9 @@ def to_extract(path: str):
     divs = [
         ','.join(
             ','.join(comma_deleter([
-            item.text[:]
-            for item in trx.find_all('div', class_="css-6e9jx2")
-        ])).split(',')[1::2]
+                item.text[:]
+                for item in trx.find_all('div', class_="css-6e9jx2")
+            ])).split(',')[1::2]
         )
         for trx in trxs_divs
     ]
@@ -147,7 +147,7 @@ def to_extract(path: str):
     for item in dividend_list_of_dicts:
         name_and_date = item['buttons'][13:(item['buttons'].find('+'))].strip()
         if not(name_and_date.endswith('2020') or name_and_date.endswith('2021')):
-            name_and_date += ', 2020'
+            name_and_date += ', 2021'
         name_and_date = name_and_date.replace(',', '')
         name_and_date = name_and_date.split()
         date = name_and_date[-3][-3:] + ' ' + name_and_date[-2] + ' ' + name_and_date[-1]
