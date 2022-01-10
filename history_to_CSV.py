@@ -19,15 +19,16 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
 
     # Entering username and password
     WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
-    username_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/div/div/div[1]/label/div[2]/input'
+    time.sleep(2)
+    username_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/div/div/div[1]/div/label/div[2]/input'
     username = driver.find_element_by_xpath(username_xpath)
-    password_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/div/div/div[2]/label/div[2]/input'
+    password_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/div/div/div[2]/div/label/div[2]/input'
     password = driver.find_element_by_xpath(password_xpath)
     username.send_keys(client_username)
     password.send_keys(client_password)
 
     # Signing in
-    sign_in_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div/button'
+    sign_in_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div[1]/button'
     driver.find_element_by_xpath(sign_in_xpath).click()
 
     time.sleep(3)
@@ -46,9 +47,9 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
     except Exception:
         # Sending the code if you already register 2FA
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
-        verification_xpath = '/html/body/div[6]/div[3]/div/section/div/form/div/div/input'
+        verification_xpath = '/html/body/div[6]/div[3]/div/div/section/div/form/div/div/input'
         driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
-        continue_xpath = '/html/body/div[6]/div[3]/div/section/div/footer/div[1]/button'
+        continue_xpath = '/html/body/div[6]/div[3]/div/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
 
     # Go to the history page (Account -> History) to scrape the data
@@ -96,7 +97,7 @@ def to_extract(path: str):
     buttons = [trx.text.replace('\n', '') for trx in trxs_buttons]
 
     # Div tags Extraction
-    trxs_divs = soup.find_all('div', class_='rh-expandable-item-a32bb9ad css-ffq7ai')
+    trxs_divs = soup.find_all('div', class_='css-1nkp1h7-Accordion')
     divs = [
         ','.join(
             ','.join(comma_deleter([
