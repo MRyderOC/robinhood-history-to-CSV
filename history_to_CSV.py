@@ -47,16 +47,23 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
     except Exception:
         # Sending the code if you already register 2FA
         WebDriverWait(driver, 10).until(lambda d: d.find_element_by_tag_name('body'))
-        verification_xpath = '/html/body/div[6]/div[3]/div/div/section/div/form/div/div/input'
-        driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
-        continue_xpath = '/html/body/div[6]/div[3]/div/div/section/div/footer/div[1]/button'
+        time.sleep(3)
+        # Using XPATH and CSS Selector to find specific elements
+        try:
+            verification_xpath = '/html/body/div[4]/div[3]/div/div/section/div/form/div/div/input'
+            driver.find_element_by_xpath(verification_xpath).send_keys(input('Please enter the code: '))
+            print('XPATH worked!')
+        except Exception:
+            driver.find_element_by_css_selector('.remove-legacy').send_keys(input('Please enter the code: '))
+            print('CSS Selector worked!')
+        continue_xpath = '/html/body/div[4]/div[3]/div/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
 
     # Go to the history page (Account -> History) to scrape the data
-    account_xpath = '/html/body/div[1]/main/div[2]/div/div/div/nav/div/div[2]/div/div[2]/div[1]/div/a'
+    account_xpath = '/html/body/div[1]/main/div[2]/div/div/nav/div/div[2]/div/div[2]/div/div/a'
     WebDriverWait(driver, 10).until(lambda d: d.find_element_by_xpath(account_xpath))
     driver.find_element_by_xpath(account_xpath).click()
-    history_xpath = '/html/body/div[1]/main/div[2]/div/div/div/nav/div/div[2]/div/div[2]/div[2]/div/div[1]/a[8]'
+    history_xpath = '/html/body/div[1]/main/div[2]/div/div/nav/div/div[2]/div/div[2]/div[2]/div/div[1]/a[8]'
     WebDriverWait(driver, 10).until(lambda d: d.find_element_by_xpath(history_xpath))
     driver.find_element_by_xpath(history_xpath).click()
 
