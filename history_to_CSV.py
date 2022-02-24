@@ -131,7 +131,7 @@ def to_extract(path: str):
             else:
                 stocks.append(tmp)
             divs_and_buttons[i]['visited'] = True
-        elif tmp[0].startswith('Market'):
+        elif tmp[0].startswith('Sell') or tmp[0].startswith('Buy'):
             crypto.append(tmp)
             divs_and_buttons[i]['visited'] = True
 
