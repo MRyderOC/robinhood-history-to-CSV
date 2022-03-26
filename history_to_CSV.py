@@ -28,7 +28,7 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
     password.send_keys(client_password)
 
     # Signing in
-    sign_in_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div[1]/button'
+    sign_in_xpath = '/html/body/div[1]/div[1]/div[2]/div/div/div/div/div/form/footer/div[1]/div/button'
     driver.find_element_by_xpath(sign_in_xpath).click()
 
     time.sleep(3)
@@ -56,7 +56,7 @@ def find_history_page_by_selenium(client_username: str, client_password: str, pa
         except Exception:
             driver.find_element_by_css_selector('.remove-legacy').send_keys(input('Please enter the code: '))
             print('CSS Selector worked!')
-        continue_xpath = '/html/body/div[4]/div[3]/div/div/section/div/footer/div[1]/button'
+        continue_xpath = '/html/body/div[1]/div[3]/div/div[3]/div/div/section/div/footer/div[1]/button'
         driver.find_element_by_xpath(continue_xpath).click()
 
     # Go to the history page (Account -> History) to scrape the data
